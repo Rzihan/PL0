@@ -3,7 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "pl0.h"
+#include "PL0.h"
 #include "set.c"
 
 // print error message.
@@ -57,10 +57,17 @@ void getsym(void) {
         word[0] = id;
         i = NRW;
         while (strcmp(id, word[i--]));
-        if (++i)
+        if (++i) {
             sym = wsym[i]; // symbol is a reserved word
-        else
+            if (DEBUG == 1) {
+                printf("保留字：%s\n", id);
+            }
+        } else {
             sym = SYM_IDENTIFIER;   // symbol is an identifier
+            if (DEBUG == 1) {
+                printf("标识符：%s\n", a);  //a
+            }
+        }
     } else if (isdigit(ch)) { // symbol is a number.
         k = num = 0;
         sym = SYM_NUMBER;
@@ -69,12 +76,18 @@ void getsym(void) {
             k++;
             getch();
         } while (isdigit(ch));
+        if (DEBUG) {
+            printf("数字：  %d\n", num);
+        }
         if (k > MAXNUMLEN)
             error(25);     // The number is too great.
     } else if (ch == ':') {
         getch();
         if (ch == '=') {
             sym = SYM_BECOMES; // :=
+            if (DEBUG == 1) {
+                printf("赋值号：%s\n", ":=");
+            }
             getch();
         } else {
             sym = SYM_NULL;       // illegal?
@@ -83,20 +96,35 @@ void getsym(void) {
         getch();
         if (ch == '=') {
             sym = SYM_GEQ;     // >=
+            if (DEBUG == 1) {
+                printf("大于等于号：>=");
+            }
             getch();
         } else {
             sym = SYM_GTR;     // >
+            if (DEBUG == 1) {
+                printf("大于号：>");
+            }
         }
     } else if (ch == '<') {
         getch();
         if (ch == '=') {
             sym = SYM_LEQ;     // <=
+            if (DEBUG == 1) {
+                printf("小于等于号：<=");
+            }
             getch();
         } else if (ch == '>') {
             sym = SYM_NEQ;     // <>
+            if (DEBUG == 1) {
+                printf("小于大于号：<>");
+            }
             getch();
         } else {
             sym = SYM_LES;     // <
+            if (DEBUG == 1) {
+                printf("小于号：<");
+            }
         }
     } else { // other tokens
         i = NSYM;

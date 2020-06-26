@@ -14,6 +14,8 @@
 
 #define STACKSIZE  1000   // maximum storage
 
+#define DEBUG 0 // 标志是否开启debug模式。0为关闭，1为开启
+
 enum symtype {
     SYM_NULL,
     SYM_IDENTIFIER,
