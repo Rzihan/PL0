@@ -118,7 +118,7 @@ void getsym(void) {
         } else if (ch == '>') {
             sym = SYM_NEQ;     // <>
             if (DEBUG == 1) {
-                printf("小于大于号：<>");
+                printf("不等号：<>\n");
             }
             getch();
         } else {
