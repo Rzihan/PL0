@@ -14,7 +14,12 @@
 
 #define STACKSIZE  1000   // maximum storage
 
-#define DEBUG 0 // 标志是否开启debug模式。0为关闭，1为开启
+#define DEBUG 1 // 标志是否开启debug模式。0为关闭，1为开启
+#define STUDENT_ID "3117005038" // 设置显示的学号
+#define USERNAME "潘梓涵" // 设置显示的名字
+#define PROFESSIONAL_CLASS "网络工程17级(2)班" // 设置显示的专业班级
+#define START_TIME "2020/06/27" // 设置开始的调试时间
+#define END_TIME "2020/06/27" // 设置结束的调试时间
 
 enum symtype {
     SYM_NULL,

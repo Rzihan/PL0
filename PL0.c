@@ -6,7 +6,7 @@
 #include "PL0.h"
 #include "set.c"
 
-// print error message.
+// 出错处理，打印出错位置和错误编码
 void error(int n) {
     int i;
 
@@ -18,6 +18,7 @@ void error(int n) {
     err++;
 } // error
 
+// 漏掉空格，读取一个字符
 void getch(void) {
     if (cc == ll) {
         if (feof(infile)) {
@@ -35,9 +36,9 @@ void getch(void) {
         line[++ll] = ' ';
     }
     ch = line[++cc];
-} // getch
+}
 
-// gets a symbol from input stream.
+// 词法分析，读取一个单词
 void getsym(void) {
     int i, k;
     char a[MAXIDLEN + 1];
@@ -138,9 +139,9 @@ void getsym(void) {
             exit(1);
         }
     }
-} // getsym
+}
 
-// generates (assembles) an instruction.
+// 生成目标代码，并送入目标程序区
 void gen(int x, int y, int z) {
     if (cx > CXMAX) {
         printf("Fatal Error: Program too long.\n");
@@ -149,9 +150,9 @@ void gen(int x, int y, int z) {
     code[cx].f = x;
     code[cx].l = y;
     code[cx++].a = z;
-} // gen
+}
 
-// tests if error occurs and skips all symbols that do not belongs to s1 or s2.
+// 测试当前单词符号是否合法
 void test(symset s1, symset s2, int n) {
     symset s;
 
@@ -162,11 +163,11 @@ void test(symset s1, symset s2, int n) {
             getsym();
         destroyset(s);
     }
-} // test
+}
 
 int dx;  // data allocation index
 
-// enter object(constant, variable or procedre) into table.
+// 登录名字表
 void enter(int kind) {
     mask *mk;
 
@@ -191,17 +192,18 @@ void enter(int kind) {
             mk->level = level;
             break;
     } // switch
-} // enter
+}
 
-// locates identifier in symbol table.
+// 查找标识符在名字表中的位置
 int position(char *id) {
     int i;
     strcpy(table[0].name, id);
     i = tx + 1;
     while (strcmp(table[--i].name, id) != 0);
     return i;
-} // position
+}
 
+// 常量定义处理
 void constdeclaration() {
     if (sym == SYM_IDENTIFIER) {
         getsym();
@@ -222,6 +224,7 @@ void constdeclaration() {
     // There must be an identifier to follow 'const', 'var', or 'procedure'.
 } // constdeclaration
 
+// 变量说明处理
 void vardeclaration(void) {
     if (sym == SYM_IDENTIFIER) {
         enter(ID_VARIABLE);
@@ -229,8 +232,9 @@ void vardeclaration(void) {
     } else {
         error(4); // There must be an identifier to follow 'const', 'var', or 'procedure'.
     }
-} // vardeclaration
+}
 
+// 列出目标代码清单
 void listcode(int from, int to) {
     int i;
 
@@ -239,8 +243,9 @@ void listcode(int from, int to) {
         printf("%5d %s\t%d\t%d\n", i, mnemonic[code[i].f], code[i].l, code[i].a);
     }
     printf("\n");
-} // listcode
+}
 
+// 因子处理
 void factor(symset fsys) {
     void expression(symset fsys);
     int i;
@@ -290,6 +295,7 @@ void factor(symset fsys) {
     } // while
 } // factor
 
+// 项处理
 void term(symset fsys) {
     int mulop;
     symset set;
@@ -305,10 +311,11 @@ void term(symset fsys) {
         } else {
             gen(OPR, 0, OPR_DIV);
         }
-    } // while
+    }
     destroyset(set);
-} // term
+}
 
+// 表达式处理
 void expression(symset fsys) {
     int addop;
     symset set;
@@ -339,6 +346,7 @@ void expression(symset fsys) {
     destroyset(set);
 } // expression
 
+// 条件处理
 void condition(symset fsys) {
     int relop;
     symset set;
@@ -381,6 +389,7 @@ void condition(symset fsys) {
     } // else
 } // condition
 
+// 语句处理
 void statement(symset fsys) {
     int i, cx1, cx2;
     symset set1, set;
@@ -478,6 +487,7 @@ void statement(symset fsys) {
     test(fsys, phi, 19);
 } // statement
 
+// 分程序分析处理过程
 void block(symset fsys) {
     int cx0; // initial code index
     mask *mk;
@@ -583,8 +593,9 @@ void block(symset fsys) {
     gen(OPR, 0, OPR_RET); // return
     test(fsys, phi, 8); // test for error: Follow the statement is an incorrect symbol.
     listcode(cx0, cx);
-} // block
+}
 
+// 通过静态链求出数据区的基地址
 int base(int stack[], int currentLevel, int levelDiff) {
     int b = currentLevel;
 
@@ -593,7 +604,7 @@ int base(int stack[], int currentLevel, int levelDiff) {
     return b;
 } // base
 
-// interprets and executes codes.
+// 对目标代码的解释执行程序
 void interpret() {
     int pc;        // program counter
     int stack[STACKSIZE];
@@ -704,7 +715,12 @@ void interpret() {
     printf("End executing PL/0 program.\n");
 } // interpret
 
+// 主程序
 void main() {
+    // 显示 设计者的班级、学号和姓名；开始调试时间；完成调试时间。
+    printf("设计者的班级、学号和姓名：%s-%s-%s\n", PROFESSIONAL_CLASS, STUDENT_ID, USERNAME);
+    printf("开发调试时间：%s, 完成调试时间: %s\n", START_TIME, END_TIME);
+
     FILE *hbin;
     char s[80];
     int i;
@@ -728,7 +744,7 @@ void main() {
     err = cc = cx = ll = 0; // initialize global variables
     ch = ' ';
     kk = MAXIDLEN;
-
+    // 开始进行词法分析
     getsym();
 
     set1 = createset(SYM_PERIOD, SYM_NULL);
