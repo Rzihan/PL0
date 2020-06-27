@@ -98,13 +98,13 @@ void getsym(void) {
         if (ch == '=') {
             sym = SYM_GEQ;     // >=
             if (DEBUG == 1) {
-                printf("大于等于号：>=");
+                printf("大于等于号：>=\n");
             }
             getch();
         } else {
             sym = SYM_GTR;     // >
             if (DEBUG == 1) {
-                printf("大于号：>");
+                printf("大于号：>\n");
             }
         }
     } else if (ch == '<') {
@@ -112,7 +112,7 @@ void getsym(void) {
         if (ch == '=') {
             sym = SYM_LEQ;     // <=
             if (DEBUG == 1) {
-                printf("小于等于号：<=");
+                printf("小于等于号：<=\n");
             }
             getch();
         } else if (ch == '>') {
@@ -130,7 +130,7 @@ void getsym(void) {
         else {
             sym = SYM_LES;     // <
             if (DEBUG == 1) {
-                printf("小于号：<");
+                printf("小于号：<\n");
             }
         }
     } else if (ch == '!') {
@@ -145,12 +145,54 @@ void getsym(void) {
             printf("Fatal Error: Unknown character.\n");
             sym = SYM_NULL;
         }
-    } else { // other tokens
+    } else if (ch == '*') {
+        getch();
+        if (ch == '=') {
+            sym = SYM_TIMES_EQL;
+            if (DEBUG == 1) {
+                printf("运算符：*=\n");
+            }
+            getch();
+        } else {
+            sym = SYM_TIMES;
+            if (DEBUG == 1) {
+                printf("运算符：*\n");
+            }
+        }
+    } else if (ch == '/') {
+        getch();
+        if (ch == '=') {
+            sym = SYM_SLASH_EQL;
+            if (DEBUG == 1) {
+                printf("运算符：/=\n");
+            }
+            getch();
+        } else {
+            sym = SYM_SLASH;
+            if (DEBUG == 1) {
+                printf("运算符：/\n");
+            }
+        }
+    } else if (ch == '|') {
+        getch();
+        if (ch == '|') {
+            sym = SYM_OR;
+            if (DEBUG == 1) {
+                printf("运算符：||\n");
+            }
+            getch();
+        } else {
+            printf("Fatal Error: Unknown character.\n");
+            sym = SYM_NULL;
+        }
+    }
+    else { // other tokens
         i = NSYM;
         csym[0] = ch;
         while (csym[i--] != ch);
         if (++i) {
             sym = ssym[i];
+            printf("运算符：%c\n", ch);
             getch();
         } else {
             printf("Fatal Error: Unknown character.\n");
