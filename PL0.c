@@ -167,6 +167,12 @@ void getsym(void) {
                 printf("ÔËËã·û£º/=\n");
             }
             getch();
+        } else if (ch == '/') {
+            sym = SYM_ANNOTATION;
+            if (DEBUG == 1) {
+                printf("×¢ÊÍ·û: //\n");
+            }
+            getch();
         } else {
             sym = SYM_SLASH;
             if (DEBUG == 1) {

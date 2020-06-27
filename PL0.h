@@ -59,7 +59,8 @@ enum symtype {
     SYM_TIMES_EQL,
     SYM_SLASH_EQL,
     SYM_AND,
-    SYM_OR
+    SYM_OR,
+    SYM_ANNOTATION
 };
 
 enum idtype {
