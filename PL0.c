@@ -116,16 +116,34 @@ void getsym(void) {
             }
             getch();
         } else if (ch == '>') {
-            sym = SYM_NEQ;     // <>
-            if (DEBUG == 1) {
-                printf("不等号：<>\n");
-            }
-            getch();
-        } else {
+            sym = SYM_NULL;
+            printf("Fatal Error: Unknown character.\n");
+        }
+        // 注释掉原先用于识别<>的代码
+//        else if (ch == '>') {
+//            sym = SYM_NEQ;     // <>
+//            if (DEBUG == 1) {
+//                printf("不等号：<>\n");
+//            }
+//            getch();
+//        }
+        else {
             sym = SYM_LES;     // <
             if (DEBUG == 1) {
                 printf("小于号：<");
             }
+        }
+    } else if (ch == '!') {
+        getch(); // 读取下一个字符，并判断是不是=
+        if (ch == '=') {
+            sym = SYM_NEQ; // !=
+            if (DEBUG) {
+                printf("不等号:!=\n");
+            }
+            getch();
+        } else {
+            printf("Fatal Error: Unknown character.\n");
+            sym = SYM_NULL;
         }
     } else { // other tokens
         i = NSYM;
